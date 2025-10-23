@@ -94,7 +94,7 @@ $ python cli.py -m "Your proposal will never work" -q
 
 **Key feature**: Each translation preserves the specific context (code, John, proposal) while applying Kyoto-style indirectness.
 
-📖 **Full Guide**: See [KYOTO_STYLE.md](KYOTO_STYLE.md) for comprehensive examples and cultural background.
+📖 **Full Guide**: See [docs/KYOTO_STYLE.md](docs/KYOTO_STYLE.md) for comprehensive examples and cultural background.
 
 ## Usage Examples
 
@@ -285,9 +285,20 @@ winwin/
 ├── processing/
 │   ├── nodes.py            # Workflow nodes
 │   └── graph.py            # LangGraph workflow
+├── docs/                   # Documentation
+│   ├── KYOTO_STYLE.md      # Kyoto-style guide
+│   ├── USAGE.md            # Usage examples
+│   ├── SECURITY.md         # Security guidelines
+│   ├── QUICKSTART.md       # Quick start guide
+│   ├── CHANGELOG.md        # Version history
+│   └── IMPROVEMENTS.md     # Future improvements
+├── tests/                  # Test files
+│   └── test_translator.py  # Unit tests
 ├── logs/                   # Log files
 ├── translator.py           # Main API
+├── cli.py                  # Command-line interface
 ├── main.py                 # Example runner
+├── tatemae                 # CLI wrapper script
 ├── requirements.txt        # Dependencies
 ├── .env.example           # Environment template
 └── README.md              # This file
@@ -318,6 +329,15 @@ Edit [config/settings.py](config/settings.py) to customize:
 - Softening phrases database
 - Honorific modifiers by level
 - LLM model and parameters
+
+## Documentation
+
+- [docs/KYOTO_STYLE.md](docs/KYOTO_STYLE.md) - Comprehensive Kyoto-style communication guide
+- [docs/USAGE.md](docs/USAGE.md) - Detailed usage examples
+- [docs/QUICKSTART.md](docs/QUICKSTART.md) - Quick start guide
+- [docs/SECURITY.md](docs/SECURITY.md) - Security best practices
+- [docs/CHANGELOG.md](docs/CHANGELOG.md) - Version history
+- [docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md) - Future improvements
 
 ## Advanced Usage
 
