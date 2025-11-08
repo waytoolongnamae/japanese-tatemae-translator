@@ -1,5 +1,7 @@
 # Kyoto-Style Tatemae (京都風建前)
 
+> ⚠️ **Disclaimer**: This document describes an **exaggerated, satirical interpretation** of Japanese communication patterns for educational purposes. The content is intentionally amplified for learning and entertainment. Real Japanese communication is nuanced and context-dependent. This tool does not represent authentic communication advice.
+
 ## Overview
 
 The translator now uses **Kyoto-style communication** - the art of being extremely polite on the surface while subtly conveying your true meaning underneath. Like a Kyoto merchant, it praises while actually criticizing, and says "yes" while meaning "no".

@@ -78,28 +78,43 @@ class DeepSeekProvider(LLMProvider):
         if not self.is_available():
             raise RuntimeError("DeepSeek provider not available")
 
-        prompt = f"""Analyze the following message and classify its intent into one of these categories:
-- refusal: The speaker is declining or rejecting something
-- disagreement: The speaker disagrees with a statement or idea
-- delay: The speaker is postponing or delaying something
-- disinterest: The speaker is not interested in an opportunity
-- criticism: The speaker is criticizing or pointing out flaws
-- neutral_polite: The speaker is making a neutral or polite statement
+        prompt = f"""You are an expert linguist specializing in pragmatics and speech act theory. Analyze the communicative intent of the following message.
 
-Message: "{text}"
+**Task**: Classify the primary communicative intent into ONE of these categories:
 
-Respond with ONLY the category name and a confidence score (0-1) in this format:
+1. **refusal** - Speaker declines, rejects, or turns down a request/offer/invitation
+   - Examples: "No thanks", "I can't do that", "I'm not available"
+
+2. **disagreement** - Speaker expresses opposition to an idea, opinion, or statement
+   - Examples: "I don't think so", "That's not correct", "I see it differently"
+
+3. **delay** - Speaker postpones, defers, or requests more time
+   - Examples: "Let me think about it", "Can we discuss this later?", "Not right now"
+
+4. **disinterest** - Speaker lacks interest in an opportunity, topic, or proposal
+   - Examples: "I'm not interested", "This isn't for me", "I'll pass"
+
+5. **criticism** - Speaker identifies flaws, problems, or negative aspects
+   - Examples: "This has issues", "That approach won't work", "There are problems with this"
+
+6. **neutral_polite** - Neutral, informative, or genuinely polite communication
+   - Examples: "Thank you", "I appreciate that", "Here's an update"
+
+**Input Message**: "{text}"
+
+**Instructions**:
+- Focus on the speaker's primary communicative goal, not surface politeness
+- Consider implicit meaning and pragmatic context
+- Assign confidence based on clarity of intent (0.7-0.9 for clear, 0.5-0.6 for ambiguous)
+
+**Output Format** (respond with ONLY these two lines):
 category: <category_name>
-confidence: <score>
-
-Example:
-category: refusal
-confidence: 0.95"""
+confidence: <0.00-1.00>"""
 
         try:
             response = self._call_api(
                 messages=[
-                    {"role": "system", "content": "You are an expert at analyzing communication intent."},
+                    {"role": "system", "content": "You are an expert linguist and pragmatics specialist. You analyze communicative intent with precision, distinguishing between surface form and underlying meaning. You provide clear, justified classifications based on speech act theory."},
                     {"role": "user", "content": prompt}
                 ]
             )
@@ -159,35 +174,98 @@ confidence: 0.95"""
             "casual": "カジュアルだが礼儀正しい表現（社内チーム向け）"
         }
 
-        prompt = f"""あなたは京都の老舗の商人のような、日本語の建前表現の達人です。
+        prompt = f"""# 役割定義
+あなたは日本の伝統的な高文脈コミュニケーションの専門家です。特に、京都の老舗商家に伝わる「建前（たてまえ）」の技法に精通しています。
 
-【重要】元のメッセージの具体的な内容やニュアンスを保ちながら、表面的には非常に丁寧で間接的な表現に変換してください。
+# タスク
+以下の直接的なメッセージを、日本の伝統的な「建前表現」に変換してください。
 
-元のメッセージ: "{input_text}"
-意図カテゴリ: {intent}
-希望する丁寧さ: {level_descriptions[level]}
+**元のメッセージ**: "{input_text}"
+**意図カテゴリ**: {intent}
+**丁寧さレベル**: {level_descriptions[level]}
 
-【京都スタイルの建前表現の原則】:
-1. 表面的には最大限に丁寧で謙虚に見える
-2. しかし、元のメッセージの具体的な意味や文脈は保持する
-3. 批判や拒否は「褒める」形式で表現する（例：「さすがお考えですね」「勉強になります」など、実は皮肉）
-4. 直接的な「NO」は絶対に言わず、遠回しに不可能性を示唆する
-5. 「検討させていただきます」「参考にさせていただきます」は「やらない」という意味
-6. 元のメッセージが具体的な対象について言及している場合、その対象を曖昧にしつつも残す
-7. 文法的に完璧な日本語にする（重複表現禁止）
-8. 皮肉や本音が表面的には絶対に気づかれないようにする
+# 建前表現の本質的原則
 
-【例】:
-- 元: "Your proposal is inefficient" → "大変興味深いご提案ですね。ぜひ今後の参考とさせていただきます」（= やらない）
-- 元: "I'm not interested in this job" → "大変魅力的なお話でございます。現在の状況を鑑みますと、慎重に検討させていただきたく存じます」（= 断る）
-- 元: "That's impossible" → "たいへん貴重なご意見をいただきありがとうございます。様々な角度から検討させていただきます」（= 無理）
+## 核心思想
+建前とは、社会的調和（和）を保つために、本音を間接的・暗示的に伝える日本独特の高文脈コミュニケーション技法です。
 
-元のメッセージの具体的な内容を反映させた、京都風の建前表現のみを出力してください:"""
+## 具体的手法
+
+### 1. 表層と深層の二重構造
+- **表層**: 極めて丁寧で肯定的な言葉遣い
+- **深層**: 本来の否定的・批判的な意図を巧妙に埋め込む
+- **重要**: 表層が完璧すぎることで、深層の意図を察知させる
+
+### 2. 京都風の間接表現技法
+a) **婉曲的拒絶**:
+   - 直接「NO」は絶対に言わない
+   - 「検討させていただきます」= 実行しない
+   - 「参考にさせていただきます」= 採用しない
+   - 「前向きに」「慎重に」= 実際には否定的
+
+b) **逆説的褒め言葉**:
+   - 批判を褒め言葉の形式で包む
+   - 「さすがですね」= あり得ない/理解できない
+   - 「勉強になります」= 間違っている
+   - 「興味深いですね」= 実行不可能
+
+c) **状況依存の責任回避**:
+   - 「現在の状況を鑑みますと」= 私の意思ではなく状況のせい
+   - 「諸般の事情により」= 説明したくない理由
+   - 「タイミングが」= 永遠に来ない適切な時期
+
+### 3. 文脈保持の原則
+- 元のメッセージの**具体的な対象・内容**は必ず保持
+- ただし、直接性を和らげ、間接的に言及する
+- 固有名詞や具体的事項は「そちら」「その件」などに置き換え可能だが、文脈から特定できる程度に残す
+
+### 4. 言語美学
+- 文法的に完璧な日本語（「いただく」の重複などを避ける）
+- 適度な謙譲語・尊敬語の使用
+- 季節感や時候の挨拶を適宜織り込む（長文の場合）
+- リズムと調和を重視
+
+## 丁寧さレベル別の調整
+
+**business（標準ビジネス）**:
+- 「〜と存じます」「〜いただければ」レベル
+- 適度な距離感を保つ
+
+**ultra_polite（超丁寧）**:
+- 「恐れ入りますが」「恐縮ではございますが」
+- 書簡形式（拝啓〜敬具）の採用も検討
+- 最大限の謙譲表現
+
+**casual（カジュアル）**:
+- 「〜と思います」「〜ですね」
+- 親しみやすいが礼儀は保つ
+- 過度な敬語は避ける
+
+# 変換例
+
+**例1 - 批判的フィードバック**
+- 元: "Your code has too many bugs and is poorly structured"
+- 建前: 「コードを拝見いたしました。大変興味深い実装アプローチですね。いくつか改善の余地がある箇所も見受けられましたので、今後のご参考までに別途お伝えできればと存じます。」
+- 分析: 「興味深い」=標準的ではない、「改善の余地」=多くの問題、「今後のご参考」=直ちに修正すべき
+
+**例2 - 求人の辞退**
+- 元: "I'm not interested in this position"
+- 建前: 「大変魅力的なポジションのご紹介、誠にありがとうございます。現在の業務に注力している状況でございまして、今回は情報として頂戴させていただきたく存じます。」
+- 分析: 「魅力的」=社交辞令、「注力している」=他を考える余地なし、「情報として」=応募しない
+
+**例3 - 提案の却下**
+- 元: "That proposal won't work"
+- 建前: 「ご提案の内容、慎重に拝見させていただきました。様々な角度から検討させていただきましたところ、現段階では実現に向けた課題も多く、もう少しお時間をいただきたく存じます。」
+- 分析: 「慎重に」=否定的に、「課題も多く」=実現困難、「お時間を」=無期限延期
+
+# 出力指示
+上記の原則に従い、元のメッセージを建前表現に変換した**日本語テキストのみ**を出力してください。
+説明・注釈・引用符は一切不要です。自然な日本語として成立する文章を生成してください。"""
 
         try:
             response = self._call_api(
                 messages=[
-                    {"role": "system", "content": "あなたは京都の老舗商人のような建前表現の達人です。表面的には完璧に丁寧ですが、巧妙に本音を隠します。元のメッセージの具体的な内容は必ず保持してください。"},
+                    {"role": "system", "content": "あなたは日本の高文脈コミュニケーションの専門家であり、特に京都の伝統的な建前表現に精通しています。表層では極めて丁寧で肯定的な表現を用いながら、深層では本音を巧妙に暗示する技法を習得しています。言語学的な洗練と文化的な深みを備えた、自然で美しい日本語を生成します。元のメッセージの具体的な内容・文脈は必ず保持しつつ、間接的な表現に変換します。"},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7

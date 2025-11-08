@@ -2,6 +2,8 @@
 
 A simple, mobile-friendly web interface for the Japanese Hedging Translator.
 
+> ⚠️ **Important**: This is an educational and satirical tool. The translations exaggerate communication patterns for learning purposes. Not recommended for real professional or personal use. See the [main README](../README.md) for full disclaimer.
+
 ## Features
 
 - 📱 **Mobile-First Design**: Optimized for smartphones and tablets

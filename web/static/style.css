@@ -60,6 +60,18 @@ body {
     font-weight: 400;
 }
 
+.disclaimer {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: #FFF3CD;
+    border: 1px solid #FFE69C;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #856404;
+    text-align: left;
+    line-height: 1.5;
+}
+
 /* Main Content */
 .main {
     flex: 1;

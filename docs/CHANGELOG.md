@@ -1,5 +1,98 @@
 # Changelog
 
+## v3.0.0 - Web App Release (2025-11-08)
+
+### 🌐 Major Features
+
+#### Mobile Web Application
+- **FastAPI Backend**: RESTful API with automatic documentation
+- **Mobile-First UI**: Responsive design optimized for smartphones
+- **PWA Support**: Install as an app, offline-ready with service worker
+- **Easy Sharing**: One-tap share to any app, copy to clipboard
+- **Simple Deployment**: Ready for Vercel, Railway, Fly.io, Heroku, etc.
+
+#### Key Features
+1. **User-Friendly Interface**
+   - Clean, minimalist design
+   - Interactive politeness level selector
+   - Real-time character counter
+   - Smooth animations and transitions
+   - Example cards to try instantly
+
+2. **REST API**
+   - POST `/api/translate` - Translate messages
+   - GET `/api/examples` - Get example translations
+   - GET `/health` - Health check endpoint
+   - Auto-generated Swagger/ReDoc documentation
+
+3. **Easy Deployment**
+   - Docker support with Dockerfile
+   - Platform configs (Procfile, runtime.txt)
+   - One-command deployment scripts
+   - Comprehensive deployment guides
+
+### 📱 Web App Structure
+
+```
+web/
+├── app.py              # FastAPI backend
+├── templates/          # HTML templates
+│   └── index.html     # Main interface
+├── static/            # Frontend assets
+│   ├── style.css      # Responsive styles
+│   ├── app.js         # Interactive logic
+│   ├── sw.js          # Service worker
+│   └── manifest.json  # PWA manifest
+├── README.md          # Web app documentation
+├── DEPLOYMENT.md      # Deployment guides
+└── requirements-web.txt
+```
+
+### 🚀 Quick Start
+
+```bash
+cd web
+pip install -r requirements-web.txt
+python app.py
+# Open http://localhost:8000
+```
+
+### 📚 New Documentation
+
+- **[web/README.md](../web/README.md)**: Complete web app guide
+- **[web/DEPLOYMENT.md](../web/DEPLOYMENT.md)**: Deployment for 8+ platforms
+- **[QUICKSTART_WEB.md](../QUICKSTART_WEB.md)**: Quick start for web app
+- Updated main **[README.md](../README.md)** with web app section
+
+### 🔧 Technical Additions
+
+- FastAPI + Uvicorn web server
+- Jinja2 templating
+- CORS middleware for API access
+- Service worker for offline functionality
+- PWA manifest for app installation
+- Docker containerization
+- Multi-platform deployment configs
+
+### 📦 Dependencies Added
+
+```
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+jinja2>=3.1.0
+pydantic>=2.0.0
+```
+
+### 🎯 Use Cases
+
+1. **Personal Use**: Simple web interface for quick translations
+2. **Team Sharing**: Deploy once, share URL with team
+3. **Mobile Access**: Use on phone via browser or install as app
+4. **API Integration**: Embed in other applications via REST API
+5. **Learning Tool**: Interactive way to learn Kyoto-style communication
+
+---
+
 ## v2.0.0 - Kyoto-Style Update (2025-10-22)
 
 ### 🎌 Major Features

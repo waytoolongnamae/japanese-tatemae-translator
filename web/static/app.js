@@ -53,15 +53,8 @@ function setupEventListeners() {
     // Share button
     shareBtn.addEventListener('click', handleShare);
 
-    // Enter to submit (with Shift+Enter for newline)
-    inputText.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            if (!translateBtn.disabled) {
-                handleTranslate();
-            }
-        }
-    });
+    // Note: Enter key adds newline naturally (no auto-submit)
+    // Users must click the translate button to submit
 }
 
 // Update character count

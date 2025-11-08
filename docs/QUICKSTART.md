@@ -2,7 +2,30 @@
 
 Transform direct messages into polite Japanese 建前 expressions
 
-## Installation (One-time)
+## Choose Your Interface
+
+### 📱 Web App (Easiest - Recommended!)
+
+Perfect for quick use and sharing with others:
+
+```bash
+cd web
+pip install -r requirements-web.txt
+python app.py
+# Open http://localhost:8000
+```
+
+**Features:**
+- ✅ Mobile-friendly interface
+- ✅ One-tap sharing
+- ✅ No command line needed
+- ✅ Easy to deploy and share
+
+See [QUICKSTART_WEB.md](../QUICKSTART_WEB.md) for deployment options.
+
+### 💻 Command Line
+
+For power users and automation:
 
 ```bash
 pip install -r requirements.txt
@@ -10,7 +33,7 @@ cp .env.example .env
 # Edit .env and add your DeepSeek API key
 ```
 
-## Basic Usage
+## Basic Usage (CLI)
 
 ### 1️⃣ Interactive Mode (Easiest!)
 

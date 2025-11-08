@@ -5,6 +5,8 @@ Command-line interface for Japanese Hedging Translator
 import argparse
 import sys
 import os
+from prompt_toolkit import prompt
+from prompt_toolkit.key_binding import KeyBindings
 from translator import JapaneseTatemaeTranslator
 
 
@@ -34,7 +36,8 @@ def interactive_mode(translator):
     print("=" * 80)
     print("Transform direct messages into polite Japanese 建前 expressions")
     print("\nCommands:")
-    print("  - Type your message and press Enter")
+    print("  - Type your message (multi-line supported)")
+    print("  - Press Esc then Enter (or Meta+Enter) to translate")
     print("  - ':level <business|ultra_polite|casual>' - Change politeness level")
     print("  - ':help' - Show this help")
     print("  - ':quit' or ':q' - Exit")
@@ -43,10 +46,23 @@ def interactive_mode(translator):
     current_level = "business"
     print(f"Current politeness level: {current_level}")
 
+    # Set up key bindings for multi-line input
+    kb = KeyBindings()
+
+    @kb.add('escape', 'enter')  # Meta+Enter (Cmd+Enter on Mac, Alt+Enter on others)
+    def _(event):
+        """Submit on Cmd+Enter (Mac) or Alt+Enter (others)"""
+        event.current_buffer.validate_and_handle()
+
     while True:
         try:
-            # Get user input
-            user_input = input("\n> ").strip()
+            # Get user input with multi-line support
+            user_input = prompt(
+                "\n> ",
+                multiline=True,
+                key_bindings=kb,
+                prompt_continuation="  "
+            ).strip()
 
             if not user_input:
                 continue
@@ -61,6 +77,8 @@ def interactive_mode(translator):
 
                 elif cmd == 'help':
                     print("\nCommands:")
+                    print("  Type your message (multi-line supported)")
+                    print("  Press Esc then Enter (or Meta+Enter) to translate")
                     print("  :level <business|ultra_polite|casual> - Change politeness level")
                     print("  :help                                  - Show this help")
                     print("  :quit or :q                           - Exit")
