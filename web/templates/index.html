@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Convert direct messages to polite Japanese business language (建前). Master Kyoto-style communication.">
+    <meta name="theme-color" content="#4A90E2">
+
+    <!-- PWA Support -->
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="apple-touch-icon" href="/static/icon.png">
+
+    <title>建前 Translator | Japanese Hedging</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">🎌 建前 Translator</h1>
+            <p class="subtitle">Convert direct messages to polite Japanese business language</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Input Section -->
+            <section class="input-section">
+                <label for="input-text" class="label">Your Direct Message</label>
+                <textarea
+                    id="input-text"
+                    class="input-textarea"
+                    placeholder="e.g., I'm not interested in this job."
+                    rows="4"
+                    maxlength="5000"
+                ></textarea>
+                <div class="char-count">
+                    <span id="char-count">0</span> / 5000
+                </div>
+
+                <!-- Politeness Level -->
+                <div class="level-selector">
+                    <label class="label">Politeness Level</label>
+                    <div class="level-buttons">
+                        <button class="level-btn" data-level="casual">Casual</button>
+                        <button class="level-btn active" data-level="business">Business</button>
+                        <button class="level-btn" data-level="ultra_polite">Ultra Polite</button>
+                    </div>
+                </div>
+
+                <!-- Translate Button -->
+                <button id="translate-btn" class="translate-btn" disabled>
+                    <span class="btn-text">Translate to 建前</span>
+                    <span class="btn-loader" style="display: none;">⏳</span>
+                </button>
+            </section>
+
+            <!-- Output Section -->
+            <section class="output-section" id="output-section" style="display: none;">
+                <div class="output-header">
+                    <label class="label">建前 Translation</label>
+                    <button id="copy-btn" class="icon-btn" title="Copy to clipboard">
+                        📋
+                    </button>
+                </div>
+                <div class="output-box" id="output-text"></div>
+
+                <!-- Metadata -->
+                <div class="metadata">
+                    <div class="metadata-item">
+                        <span class="metadata-label">Intent:</span>
+                        <span class="metadata-value" id="intent">-</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Confidence:</span>
+                        <span class="metadata-value" id="confidence">-</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Language:</span>
+                        <span class="metadata-value" id="language">-</span>
+                    </div>
+                </div>
+
+                <!-- Share Button -->
+                <button id="share-btn" class="share-btn">
+                    📤 Share Translation
+                </button>
+            </section>
+
+            <!-- Examples Section -->
+            <section class="examples-section">
+                <h2 class="section-title">📚 Examples</h2>
+                <div id="examples-container" class="examples-grid">
+                    <!-- Examples loaded via JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>
+                <a href="https://github.com/yourusername/winwin" target="_blank" rel="noopener">
+                    View on GitHub
+                </a>
+                ·
+                <a href="/docs" target="_blank">
+                    Documentation
+                </a>
+            </p>
+            <p class="footer-note">
+                Powered by DeepSeek · Kyoto-style communication
+            </p>
+        </footer>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast" style="display: none;"></div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

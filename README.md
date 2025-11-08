@@ -33,7 +33,26 @@ DEEPSEEK_API_KEY_CHAT=your_deepseek_key_here
 
 ## Quick Start
 
-### Command Line (Recommended)
+### 📱 Web App (Easy to Share!)
+
+```bash
+cd web
+pip install -r requirements-web.txt
+python app.py
+```
+
+Open [http://localhost:8000](http://localhost:8000) in your browser.
+
+**Features:**
+- Mobile-friendly interface
+- One-tap sharing
+- Copy to clipboard
+- PWA support (install as app)
+- Easy to deploy and share with others
+
+See [web/README.md](web/README.md) for deployment options (Vercel, Railway, Fly.io, etc.)
+
+### 💻 Command Line
 
 ```bash
 # Interactive mode (default)
@@ -291,6 +310,13 @@ winwin/
 │   ├── base.py             # Provider interface
 │   ├── deepseek.py         # DeepSeek implementation
 │   └── fallback.py         # Keyword-based fallback
+├── web/                    # Web application
+│   ├── app.py              # FastAPI backend
+│   ├── templates/          # HTML templates
+│   ├── static/             # CSS, JS, assets
+│   ├── run.sh              # Quick start script
+│   ├── Dockerfile          # Docker configuration
+│   └── README.md           # Web app docs
 ├── docs/                   # Documentation
 │   ├── KYOTO_STYLE.md      # Kyoto-style guide
 │   ├── USAGE.md            # Usage examples
