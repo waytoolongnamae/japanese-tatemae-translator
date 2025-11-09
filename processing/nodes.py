@@ -124,24 +124,28 @@ def language_detector_node(state: TranslationState) -> Dict[str, Any]:
     """
     input_text = state["input_text"]
 
-    # Simple heuristic: check if text contains Japanese characters
+    # Check for Japanese-specific characters (Hiragana and Katakana)
     has_hiragana = any('\u3040' <= char <= '\u309f' for char in input_text)
     has_katakana = any('\u30a0' <= char <= '\u30ff' for char in input_text)
-    has_kanji = any('\u4e00' <= char <= '\u9faf' for char in input_text)
 
-    if has_hiragana or has_katakana or has_kanji:
+    # If Japanese-specific characters are present, it's definitely Japanese
+    if has_hiragana or has_katakana:
         detected_language = "ja"
-        logger.info("Detected language: Japanese")
+        logger.info("Detected language: Japanese (has kana)")
         return {"detected_language": detected_language}
 
-    # Check for Chinese
-    has_chinese = any('\u4e00' <= char <= '\u9fff' for char in input_text)
-    if has_chinese:
-        detected_language = "zh"
-    else:
-        detected_language = "en"
+    # Check for CJK characters (used by both Chinese and Japanese)
+    has_cjk = any('\u4e00' <= char <= '\u9fff' for char in input_text)
 
-    logger.info(f"Detected language: {detected_language}")
+    if has_cjk:
+        # If there are CJK characters but no kana, assume Chinese
+        # (Pure Japanese text almost always contains at least some hiragana)
+        detected_language = "zh"
+        logger.info("Detected language: Chinese (has CJK without kana)")
+    else:
+        # No CJK or kana characters, assume English
+        detected_language = "en"
+        logger.info("Detected language: English")
 
     # For now, we'll work with the original text
     # In production, you might want to translate to Japanese first
