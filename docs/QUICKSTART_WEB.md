@@ -28,49 +28,17 @@ Open [http://localhost:8000](http://localhost:8000) 🎉
 3. **Click "Translate to 建前"**
 4. **Copy or share** the translation!
 
-## 🌐 Deploy & Share (Free Options)
+## 🌐 Deploy for Public Access
 
-### Option 1: Vercel (Recommended)
+Want to share this with others? See **[DEPLOYMENT.md](DEPLOYMENT.md)** for complete deployment instructions on:
 
-**Easiest deployment - 2 minutes:**
+- **Railway** (easiest, free tier)
+- **Fly.io** (best free tier, global CDN)
+- **Vercel** (simple, generous free tier)
+- **Heroku, DigitalOcean, AWS, GCP** (production options)
+- **Docker** (self-hosted)
 
-1. Fork this repo on GitHub
-2. Go to [vercel.com](https://vercel.com)
-3. Click "New Project" → Import your fork
-4. Add environment variable: `DEEPSEEK_API_KEY_CHAT`
-5. Deploy!
-
-Your app will be live at: `https://your-app.vercel.app`
-
-### Option 2: Railway
-
-1. Go to [railway.app](https://railway.app)
-2. Click "Start a New Project" → Deploy from GitHub
-3. Select your repo
-4. Add environment variable: `DEEPSEEK_API_KEY_CHAT`
-5. Deploy!
-
-### Option 3: Fly.io
-
-```bash
-# Install flyctl
-curl -L https://fly.io/install.sh | sh
-
-# Login
-fly auth login
-
-# Navigate to web directory
-cd web
-
-# Launch (follow prompts)
-fly launch
-
-# Set your API key
-fly secrets set DEEPSEEK_API_KEY_CHAT=your_key_here
-
-# Deploy
-fly deploy
-```
+Quick deploy commands available for each platform!
 
 ## 🎨 Features
 

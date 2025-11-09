@@ -12,11 +12,11 @@ Complete guide to the Japanese Hedging Translator (建前 Translator)
    - Basic usage examples
    - Common commands
 
-2. **[../QUICKSTART_WEB.md](../QUICKSTART_WEB.md)** - Web app quick start
+2. **[QUICKSTART_WEB.md](QUICKSTART_WEB.md)** - Web app quick start
    - Run locally in 1 minute
-   - Deployment options (Vercel, Railway, Fly.io)
+   - Features and usage
+   - Customization options
    - Troubleshooting tips
-   - Next steps
 
 3. **[../README.md](../README.md)** - Main project documentation
    - Project overview
@@ -35,13 +35,14 @@ Complete guide to the Japanese Hedging Translator (建前 Translator)
    - Configuration
    - Browser support
 
-2. **[../web/DEPLOYMENT.md](../web/DEPLOYMENT.md)** - Deployment guide
-   - 8+ deployment platforms
-   - Environment variables
-   - Custom domains
-   - SSL/HTTPS setup
-   - Performance tips
-   - Troubleshooting
+2. **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete deployment guide
+   - 8+ deployment platforms (Railway, Fly.io, Vercel, Heroku, AWS, GCP, DigitalOcean, Docker)
+   - Step-by-step instructions for each platform
+   - Environment variables and configuration
+   - Custom domains and SSL/HTTPS
+   - Monitoring, scaling, and maintenance
+   - Cost comparison and recommendations
+   - Performance tips and troubleshooting
 
 ## 💻 Command Line Interface
 
@@ -123,10 +124,10 @@ Complete guide to the Japanese Hedging Translator (建前 Translator)
 ### I Want To...
 
 #### Get Started Quickly
-→ [QUICKSTART.md](QUICKSTART.md) or [QUICKSTART_WEB.md](../QUICKSTART_WEB.md)
+→ [QUICKSTART.md](QUICKSTART.md) or [QUICKSTART_WEB.md](QUICKSTART_WEB.md)
 
 #### Deploy a Web App
-→ [web/DEPLOYMENT.md](../web/DEPLOYMENT.md)
+→ [DEPLOYMENT.md](DEPLOYMENT.md)
 
 #### Use from Command Line
 → [USAGE.md](USAGE.md)
@@ -147,7 +148,7 @@ Complete guide to the Japanese Hedging Translator (建前 Translator)
 → [CHANGELOG.md](CHANGELOG.md)
 
 #### Share with My Team
-→ [web/DEPLOYMENT.md](../web/DEPLOYMENT.md) (deploy once, share URL)
+→ [DEPLOYMENT.md](DEPLOYMENT.md) (deploy once, share URL)
 
 ## 📋 Quick Reference
 
@@ -156,12 +157,12 @@ Complete guide to the Japanese Hedging Translator (建前 Translator)
 | Task | Documentation |
 |------|---------------|
 | Install & run locally | [QUICKSTART.md](QUICKSTART.md) |
-| Deploy web app | [web/DEPLOYMENT.md](../web/DEPLOYMENT.md) |
+| Deploy web app | [DEPLOYMENT.md](DEPLOYMENT.md) |
 | Use CLI | [USAGE.md](USAGE.md) |
 | Understand translations | [KYOTO_STYLE.md](KYOTO_STYLE.md) |
 | Run tests | [TESTING.md](TESTING.md) |
 | Secure deployment | [SECURITY.md](SECURITY.md) |
-| API integration | [web/README.md](../web/README.md) |
+| API integration | [../web/README.md](../web/README.md) |
 | See changes | [CHANGELOG.md](CHANGELOG.md) |
 
 ### File Locations
@@ -169,28 +170,29 @@ Complete guide to the Japanese Hedging Translator (建前 Translator)
 ```
 winwin/
 ├── README.md                    # Main documentation
-├── QUICKSTART_WEB.md           # Web app quick start
 ├── docs/                       # Documentation directory
-│   ├── INDEX.md               # This file
+│   ├── INDEX.md               # This file (documentation index)
 │   ├── QUICKSTART.md          # General quick start
+│   ├── QUICKSTART_WEB.md      # Web app quick start
+│   ├── DEPLOYMENT.md          # Complete deployment guide
 │   ├── USAGE.md               # CLI usage guide
 │   ├── KYOTO_STYLE.md         # Cultural guide
 │   ├── TESTING.md             # Testing guide
 │   ├── SECURITY.md            # Security guide
 │   ├── CHANGELOG.md           # Version history
-│   └── IMPROVEMENTS.md        # Future plans
+│   ├── IMPROVEMENTS.md        # Future plans
+│   └── PROJECT_STRUCTURE.md   # Project structure
 └── web/                       # Web application
-    ├── README.md              # Web app guide
-    └── DEPLOYMENT.md          # Deployment guide
+    └── README.md              # Web app API documentation
 ```
 
 ## 🎯 Learning Path
 
 ### Beginner Path
 1. Read [QUICKSTART.md](QUICKSTART.md)
-2. Try the web app: [QUICKSTART_WEB.md](../QUICKSTART_WEB.md)
+2. Try the web app: [QUICKSTART_WEB.md](QUICKSTART_WEB.md)
 3. Learn about Kyoto-style: [KYOTO_STYLE.md](KYOTO_STYLE.md)
-4. Deploy your own: [web/DEPLOYMENT.md](../web/DEPLOYMENT.md)
+4. Deploy your own: [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ### Developer Path
 1. Read [README.md](../README.md) - Architecture
@@ -200,9 +202,9 @@ winwin/
 5. Check roadmap: [IMPROVEMENTS.md](IMPROVEMENTS.md)
 
 ### Business User Path
-1. Try web app: [QUICKSTART_WEB.md](../QUICKSTART_WEB.md)
+1. Try web app: [QUICKSTART_WEB.md](QUICKSTART_WEB.md)
 2. Understand Kyoto-style: [KYOTO_STYLE.md](KYOTO_STYLE.md)
-3. Deploy for team: [web/DEPLOYMENT.md](../web/DEPLOYMENT.md)
+3. Deploy for team: [DEPLOYMENT.md](DEPLOYMENT.md)
 4. Share and train team on usage
 
 ## 🆘 Getting Help
@@ -210,8 +212,8 @@ winwin/
 ### Troubleshooting
 
 - **Installation issues**: [QUICKSTART.md](QUICKSTART.md)
-- **Deployment problems**: [web/DEPLOYMENT.md#troubleshooting](../web/DEPLOYMENT.md#troubleshooting)
-- **API errors**: [web/README.md](../web/README.md)
+- **Deployment problems**: [DEPLOYMENT.md](DEPLOYMENT.md#troubleshooting)
+- **API errors**: [../web/README.md](../web/README.md)
 - **Security concerns**: [SECURITY.md](SECURITY.md)
 
 ### Support Channels
@@ -238,4 +240,4 @@ Interested in contributing? Read:
 
 **Last Updated**: 2025-11-08 (v3.0.0)
 
-**Quick Links**: [Main README](../README.md) | [Web App](../web/README.md) | [Deployment](../web/DEPLOYMENT.md) | [Changelog](CHANGELOG.md)
+**Quick Links**: [Main README](../README.md) | [Web App](../web/README.md) | [Deployment](DEPLOYMENT.md) | [Changelog](CHANGELOG.md)

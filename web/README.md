@@ -44,58 +44,29 @@ docker run -p 8000:8000 --env-file .env tatemae-web
 
 ## Deployment
 
-### Deploy to Vercel
+For detailed deployment instructions to various platforms (Vercel, Railway, Fly.io, Heroku, DigitalOcean, AWS, GCP, Docker, etc.), see the comprehensive **[Deployment Guide](../docs/DEPLOYMENT.md)**.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/winwin)
+### Quick Deploy Options
 
-1. Fork this repository
-2. Sign up at [Vercel](https://vercel.com)
-3. Import your forked repository
-4. Add environment variable: `DEEPSEEK_API_KEY_CHAT`
-5. Deploy!
-
-### Deploy to Railway
-
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template)
-
-1. Click the button above
-2. Add environment variable: `DEEPSEEK_API_KEY_CHAT`
-3. Deploy!
-
-### Deploy to Fly.io
-
+**Railway (Easiest):**
 ```bash
-# Install flyctl
+# Push to GitHub, then:
+# 1. Visit railway.app
+# 2. Connect GitHub repo
+# 3. Add DEEPSEEK_API_KEY_CHAT
+# 4. Deploy!
+```
+
+**Fly.io (Best Free Tier):**
+```bash
 curl -L https://fly.io/install.sh | sh
-
-# Login
 fly auth login
-
-# Launch app
 fly launch
-
-# Set secret
-fly secrets set DEEPSEEK_API_KEY_CHAT=your_key_here
-
-# Deploy
+fly secrets set DEEPSEEK_API_KEY_CHAT=your_key
 fly deploy
 ```
 
-### Deploy to Heroku
-
-```bash
-# Login
-heroku login
-
-# Create app
-heroku create your-app-name
-
-# Set config
-heroku config:set DEEPSEEK_API_KEY_CHAT=your_key_here
-
-# Deploy
-git push heroku main
-```
+See [docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md) for complete instructions and more platforms.
 
 ## API Endpoints
 
