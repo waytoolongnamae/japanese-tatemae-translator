@@ -161,18 +161,50 @@ function setLoadingState(isLoading) {
 async function handleCopy() {
     if (!lastTranslation) return;
 
-    try {
-        await navigator.clipboard.writeText(lastTranslation.tatemae_text);
-        showToast('📋 Copied to clipboard!');
+    const textToCopy = lastTranslation.tatemae_text;
 
-        // Visual feedback
-        copyBtn.textContent = '✓';
-        setTimeout(() => {
-            copyBtn.textContent = '📋';
-        }, 1500);
+    try {
+        // Try modern Clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(textToCopy);
+            showToast('📋 Copied to clipboard!');
+
+            // Visual feedback
+            copyBtn.textContent = '✓';
+            setTimeout(() => {
+                copyBtn.textContent = '📋';
+            }, 1500);
+        } else {
+            // Fallback for older browsers or non-HTTPS contexts
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast('📋 Copied to clipboard!');
+
+                    // Visual feedback
+                    copyBtn.textContent = '✓';
+                    setTimeout(() => {
+                        copyBtn.textContent = '📋';
+                    }, 1500);
+                } else {
+                    throw new Error('execCommand failed');
+                }
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
     } catch (error) {
         console.error('Copy failed:', error);
-        showToast('❌ Copy failed');
+        showToast('❌ Copy failed - try selecting and copying manually');
     }
 }
 
