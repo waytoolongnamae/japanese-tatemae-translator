@@ -10,7 +10,16 @@ Perfect for quick use and sharing with others:
 
 ```bash
 cd web
+
+# Using uv (recommended - faster)
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -r requirements-web.txt
+
+# OR using pip
 pip install -r requirements-web.txt
+
+# Run the app
 python app.py
 # Open http://localhost:8000
 ```
@@ -21,14 +30,24 @@ python app.py
 - ✅ No command line needed
 - ✅ Easy to deploy and share
 
-See [QUICKSTART_WEB.md](../QUICKSTART_WEB.md) for deployment options.
+See [QUICKSTART_WEB.md](QUICKSTART_WEB.md) for more details and deployment options.
 
 ### 💻 Command Line
 
 For power users and automation:
 
 ```bash
+# Using uv (recommended)
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -r requirements.txt
+
+# OR using pip
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
+
+# Configure API key
 cp .env.example .env
 # Edit .env and add your DeepSeek API key
 ```

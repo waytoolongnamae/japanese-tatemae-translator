@@ -21,7 +21,12 @@ A simple, mobile-friendly web interface for the Japanese Hedging Translator.
 # Navigate to web directory
 cd web
 
-# Install dependencies
+# Using uv (Recommended - Faster)
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -r requirements-web.txt
+
+# OR using pip
 pip install -r requirements-web.txt
 
 # Create .env file

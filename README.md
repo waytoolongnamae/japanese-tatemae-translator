@@ -104,10 +104,38 @@ $ python cli.py -m "Your proposal will never work" -q
 
 ## 📦 Installation
 
+### Using uv (Recommended)
+
+[uv](https://github.com/astral-sh/uv) is a fast Python package installer and resolver.
+
 ```bash
 # Clone repository
 git clone https://github.com/yourusername/winwin.git
 cd winwin
+
+# Install uv if you haven't already
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Create virtual environment and install dependencies
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -r requirements.txt
+
+# Configure API key
+cp .env.example .env
+# Add your DeepSeek API key to .env
+```
+
+### Using pip
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/winwin.git
+cd winwin
+
+# Create virtual environment (recommended)
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
