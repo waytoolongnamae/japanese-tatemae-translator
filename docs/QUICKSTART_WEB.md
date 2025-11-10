@@ -7,17 +7,17 @@ The easiest way to use and share the Japanese Hedging Translator.
 ### Using uv (Recommended - Faster)
 
 ```bash
-# 1. Navigate to web directory
+# 1. Configure API key (from root directory)
+cp .env.example .env
+# Add your DEEPSEEK_API_KEY_CHAT to .env (or skip for keyword-based fallback)
+
+# 2. Navigate to web directory
 cd web
 
-# 2. Create virtual environment and install dependencies
+# 3. Create virtual environment and install dependencies
 uv venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 uv pip install -r requirements-web.txt
-
-# 3. Copy environment file
-cp .env.example .env
-# Add your DEEPSEEK_API_KEY_CHAT to .env (or skip for keyword-based fallback)
 
 # 4. Start the server
 python app.py
@@ -26,12 +26,16 @@ python app.py
 ### Using pip
 
 ```bash
-cd web
-pip install -r requirements-web.txt
+# Configure API key first
 cp .env.example .env
 # Edit .env to add DEEPSEEK_API_KEY_CHAT
+
+cd web
+pip install -r requirements-web.txt
 python app.py
 ```
+
+**Important**: The web app uses `.env` from the **root directory**, not `web/.env`.
 
 Open [http://localhost:8000](http://localhost:8000) 🎉
 

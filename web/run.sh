@@ -10,12 +10,13 @@ NC='\033[0m' # No Color
 echo -e "${BLUE}🎌 Starting Japanese Hedging Translator Web App${NC}"
 echo ""
 
-# Check if .env exists
-if [ ! -f .env ]; then
+# Check if root .env exists (web app uses parent directory's .env)
+if [ ! -f ../.env ]; then
+    echo "⚠️  No .env file found in root directory"
     echo "Creating .env from .env.example..."
-    cp .env.example .env
-    echo -e "${GREEN}✓${NC} Created .env file"
-    echo "⚠️  Please edit .env and add your DEEPSEEK_API_KEY_CHAT"
+    cp ../.env.example ../.env
+    echo -e "${GREEN}✓${NC} Created .env file in root directory"
+    echo "⚠️  Please edit ../env and add your DEEPSEEK_API_KEY_CHAT"
     echo ""
 fi
 

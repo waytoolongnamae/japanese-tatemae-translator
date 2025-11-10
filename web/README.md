@@ -18,6 +18,10 @@ A simple, mobile-friendly web interface for the Japanese Hedging Translator.
 ### Local Development
 
 ```bash
+# From root directory, configure API key first
+cp .env.example .env
+# Add your DEEPSEEK_API_KEY_CHAT to .env
+
 # Navigate to web directory
 cd web
 
@@ -29,13 +33,11 @@ uv pip install -r requirements-web.txt
 # OR using pip
 pip install -r requirements-web.txt
 
-# Create .env file
-cp .env.example .env
-# Add your DEEPSEEK_API_KEY_CHAT to .env
-
-# Run the server
+# Run the server (uses root .env file)
 python app.py
 ```
+
+**Note**: The web app uses the `.env` file from the **root directory**, not from `web/.env`. This is because it imports the translator module from the parent directory.
 
 Open [http://localhost:8000](http://localhost:8000) in your browser.
 
