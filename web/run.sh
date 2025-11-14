@@ -7,7 +7,48 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Parse arguments
+MODEL=""
+PORT="8000"
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --model|-M)
+            MODEL="$2"
+            shift 2
+            ;;
+        --port|-p)
+            PORT="$2"
+            shift 2
+            ;;
+        --help|-h)
+            echo "Usage: ./run.sh [options]"
+            echo ""
+            echo "Options:"
+            echo "  --model, -M MODEL      LLM provider (deepseek or openai)"
+            echo "  --port, -p PORT        Port to run on (default: 8000)"
+            echo "  --help, -h             Show this help message"
+            echo ""
+            echo "Examples:"
+            echo "  ./run.sh                    # Run with default model"
+            echo "  ./run.sh --model openai     # Run with OpenAI model"
+            echo "  ./run.sh -M deepseek        # Run with DeepSeek model"
+            echo "  ./run.sh -p 3000            # Run on port 3000"
+            echo ""
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
+
 echo -e "${BLUE}🎌 Starting Japanese Hedging Translator Web App${NC}"
+if [ -n "$MODEL" ]; then
+    echo -e "${GREEN}Model: $MODEL${NC}"
+fi
 echo ""
 
 # Check if root .env exists (web app uses parent directory's .env)
@@ -63,4 +104,10 @@ fi
 # Run the app
 echo -e "${GREEN}Starting server...${NC}"
 echo ""
+
+# Set MODEL_PROVIDER environment variable if specified
+if [ -n "$MODEL" ]; then
+    export MODEL_PROVIDER="$MODEL"
+fi
+
 python app.py
