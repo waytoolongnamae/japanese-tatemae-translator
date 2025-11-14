@@ -9,6 +9,10 @@ from openai import OpenAI
 # Set test environment variables before imports
 os.environ["DEEPSEEK_API_KEY_CHAT"] = "sk-test-key-for-testing-only"
 os.environ["DEEPSEEK_BASE_URL"] = "https://api.deepseek.com"
+os.environ["OPENAI_API_KEY"] = "test-openai-key-for-testing-only"
+os.environ["OPENAI_BASE_URL"] = "https://api.openai.com/v1"
+os.environ["OPENAI_MODEL"] = "gpt-4"
+os.environ["MODEL_PROVIDER"] = "deepseek"
 os.environ["DEFAULT_MODEL"] = "deepseek-chat"
 os.environ["TEMPERATURE"] = "0.7"
 os.environ["LOG_LEVEL"] = "ERROR"  # Suppress logs during testing

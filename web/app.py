@@ -17,6 +17,7 @@ from pydantic import BaseModel, Field
 # Add parent directory to path to import translator
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from translator import JapaneseTatemaeTranslator
+from processing.nodes import get_provider_info
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -57,6 +58,7 @@ class TranslateResponse(BaseModel):
     detected_language: str
     level: str
     context: Optional[str] = None
+    model_info: Optional[dict] = None
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -68,7 +70,19 @@ async def home(request: Request):
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {"status": "healthy", "service": "Japanese Hedging Translator"}
+    provider_info = get_provider_info()
+    return {
+        "status": "healthy",
+        "service": "Japanese Hedging Translator",
+        "model": provider_info
+    }
+
+
+@app.get("/api/model")
+async def get_model_info():
+    """Get current model information"""
+    provider_info = get_provider_info()
+    return provider_info
 
 
 @app.post("/api/translate", response_model=TranslateResponse)
@@ -106,6 +120,10 @@ async def translate(request: TranslateRequest):
                 status_code=400,
                 detail=result.get("error", "Translation failed")
             )
+
+        # Add model information
+        provider_info = get_provider_info()
+        result["model_info"] = provider_info
 
         return TranslateResponse(**result)
 

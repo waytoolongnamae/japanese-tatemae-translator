@@ -25,6 +25,7 @@ const btnLoader = translateBtn.querySelector('.btn-loader');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    loadModelInfo();
     loadExamples();
     setupEventListeners();
 });
@@ -121,6 +122,24 @@ async function handleTranslate() {
         showToast('❌ Translation failed: ' + error.message);
     } finally {
         setLoadingState(false);
+    }
+}
+
+// Load model information
+async function loadModelInfo() {
+    try {
+        const response = await fetch('/api/model');
+        const modelInfo = await response.json();
+
+        const providerEl = document.getElementById('model-provider');
+        const modelNameEl = document.getElementById('model-name');
+
+        if (providerEl && modelNameEl) {
+            providerEl.textContent = modelInfo.provider || 'unknown';
+            modelNameEl.textContent = modelInfo.model || 'unknown';
+        }
+    } catch (error) {
+        console.error('Failed to load model info:', error);
     }
 }
 

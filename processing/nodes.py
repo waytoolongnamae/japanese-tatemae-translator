@@ -3,30 +3,83 @@ LangGraph workflow nodes for Japanese Hedging Translator
 """
 import random
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from config.settings import (
     INTENT_CATEGORIES,
     TEMPLATES,
     SOFTENERS,
-    HONORIFIC_MODIFIERS
+    HONORIFIC_MODIFIERS,
+    MODEL_PROVIDER
 )
 from models.state import TranslationState
 from providers import DeepSeekProvider, FallbackProvider
+from providers.openai import OpenAIProvider
 
 logger = logging.getLogger(__name__)
 
-# Initialize provider with fallback
-try:
-    _primary_provider = DeepSeekProvider()
-    if _primary_provider.is_available():
-        provider = _primary_provider
-        logger.info("Using DeepSeek provider")
+# Global provider variable
+provider = None
+_provider_name = None
+
+
+def _get_provider_instance(provider_type: str):
+    """Get provider instance based on type"""
+    if provider_type == "openai":
+        return OpenAIProvider()
+    elif provider_type == "deepseek":
+        return DeepSeekProvider()
     else:
+        logger.warning(f"Unknown provider type: {provider_type}, defaulting to deepseek")
+        return DeepSeekProvider()
+
+
+def initialize_provider(provider_type: Optional[str] = None):
+    """
+    Initialize the LLM provider based on configuration or parameter.
+
+    Args:
+        provider_type: Optional provider type override ("openai" or "deepseek")
+    """
+    global provider, _provider_name
+
+    selected_provider = provider_type or MODEL_PROVIDER
+
+    try:
+        _primary_provider = _get_provider_instance(selected_provider)
+        if _primary_provider.is_available():
+            provider = _primary_provider
+            _provider_name = selected_provider
+            model_info = getattr(provider, 'model', 'unknown')
+            logger.info(f"Using {selected_provider} provider with model: {model_info}")
+        else:
+            provider = FallbackProvider()
+            _provider_name = "fallback"
+            logger.info(f"{selected_provider} unavailable, using fallback provider")
+    except Exception as e:
+        logger.warning(f"Error initializing {selected_provider} provider: {e}, using fallback")
         provider = FallbackProvider()
-        logger.info("DeepSeek unavailable, using fallback provider")
-except Exception as e:
-    logger.warning(f"Error initializing DeepSeek provider: {e}, using fallback")
-    provider = FallbackProvider()
+        _provider_name = "fallback"
+
+
+def get_provider_info() -> Dict[str, str]:
+    """
+    Get information about the current provider.
+
+    Returns:
+        Dictionary with provider name and model information
+    """
+    global provider, _provider_name
+    if provider is None:
+        initialize_provider()
+
+    return {
+        "provider": _provider_name or "unknown",
+        "model": getattr(provider, 'model', 'unknown') if provider else "unknown"
+    }
+
+
+# Initialize provider on module load
+initialize_provider()
 
 
 def intent_detector_node(state: TranslationState) -> Dict[str, Any]:

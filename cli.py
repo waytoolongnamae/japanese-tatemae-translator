@@ -8,6 +8,7 @@ import os
 from prompt_toolkit import prompt
 from prompt_toolkit.key_binding import KeyBindings
 from translator import JapaneseTatemaeTranslator
+from processing.nodes import initialize_provider, get_provider_info
 
 
 def print_colored(text, color_code):
@@ -35,10 +36,16 @@ def interactive_mode(translator):
     print_colored("\n🇯🇵 Japanese Hedging Translator - Interactive Mode", "1;35")
     print("=" * 80)
     print("Transform direct messages into polite Japanese 建前 expressions")
+
+    # Display model information
+    provider_info = get_provider_info()
+    print_colored(f"\n🤖 Model: {provider_info['provider']} ({provider_info['model']})", "1;34")
+
     print("\nCommands:")
     print("  - Type your message (multi-line supported)")
     print("  - Press Esc then Enter (or Meta+Enter) to translate")
     print("  - ':level <business|ultra_polite|casual>' - Change politeness level")
+    print("  - ':model' - Show current model information")
     print("  - ':help' - Show this help")
     print("  - ':quit' or ':q' - Exit")
     print("=" * 80 + "\n")
@@ -80,8 +87,16 @@ def interactive_mode(translator):
                     print("  Type your message (multi-line supported)")
                     print("  Press Esc then Enter (or Meta+Enter) to translate")
                     print("  :level <business|ultra_polite|casual> - Change politeness level")
+                    print("  :model                                 - Show current model information")
                     print("  :help                                  - Show this help")
                     print("  :quit or :q                           - Exit")
+                    continue
+
+                elif cmd == 'model':
+                    provider_info = get_provider_info()
+                    print_colored(f"\n🤖 Current Model:", "1;36")
+                    print(f"  Provider: {provider_info['provider']}")
+                    print(f"  Model:    {provider_info['model']}")
                     continue
 
                 elif cmd.startswith('level '):
@@ -172,7 +187,18 @@ Examples:
         help='Run in interactive mode (default if no message provided)'
     )
 
+    parser.add_argument(
+        '--model',
+        type=str,
+        choices=['deepseek', 'openai'],
+        help='LLM provider to use (deepseek or openai)'
+    )
+
     args = parser.parse_args()
+
+    # Initialize provider if model is specified
+    if args.model:
+        initialize_provider(args.model)
 
     # Initialize translator
     try:

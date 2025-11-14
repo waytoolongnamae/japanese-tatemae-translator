@@ -44,6 +44,10 @@ python cli.py -m "I'm not interested in this job."
 
 # With politeness level
 python cli.py -m "That's not possible." -l ultra_polite
+
+# With specific model provider
+python cli.py --model openai  # Use OpenAI
+python cli.py --model deepseek  # Use DeepSeek (default)
 ```
 
 ### 🐍 Python API
@@ -67,8 +71,10 @@ print(result["tatemae_text"])
 - **3 Politeness Levels**: business, ultra_polite, casual
 - **Multi-line Support**: CLI handles pasted text with line breaks
 - **Web & API**: Mobile-friendly web UI + REST API
-- **Provider Abstraction**: DeepSeek with automatic keyword-based fallback
-- **90%+ Test Coverage**: Comprehensive unit and integration tests
+- **Multiple LLM Providers**: DeepSeek (default) and OpenAI with automatic fallback
+- **Model Selection**: Choose your preferred provider via CLI argument or environment variable
+- **Model Info Display**: See current provider and model in both CLI and web interface
+- **81% Test Coverage**: 152 tests with comprehensive unit and integration coverage
 
 ---
 

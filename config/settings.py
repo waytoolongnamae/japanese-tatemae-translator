@@ -10,6 +10,14 @@ load_dotenv()
 # API Configuration
 DEEPSEEK_API_KEY_CHAT = os.getenv("DEEPSEEK_API_KEY_CHAT", "")
 DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+
+# OpenAI Configuration
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4")
+
+# Model Provider Selection
+MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "deepseek")  # Options: "deepseek", "openai"
 DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "deepseek-chat")
 TEMPERATURE = float(os.getenv("TEMPERATURE", "0.7"))
 
