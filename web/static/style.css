@@ -194,6 +194,26 @@ body {
     box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
 }
 
+/* High fidelity warning style */
+.fidelity-btn[data-fidelity="high"] {
+    border-color: #FF6B6B;
+    background: #FFF5F5;
+    color: #C92A2A;
+}
+
+.fidelity-btn[data-fidelity="high"]:hover {
+    border-color: #FA5252;
+    background: #FFE3E3;
+    box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
+}
+
+.fidelity-btn[data-fidelity="high"].active {
+    background: #FF6B6B;
+    color: white;
+    border-color: #FA5252;
+    box-shadow: 0 2px 6px rgba(255, 107, 107, 0.4);
+}
+
 /* Translate Button */
 .translate-btn {
     width: 100%;
