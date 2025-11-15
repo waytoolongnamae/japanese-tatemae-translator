@@ -152,6 +152,40 @@ body {
     border-color: var(--primary-color);
 }
 
+/* Fidelity Selector */
+.fidelity-selector {
+    margin-top: 20px;
+}
+
+.fidelity-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.fidelity-btn {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    background: var(--card-background);
+    color: var(--text-primary);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.fidelity-btn:hover {
+    border-color: var(--secondary-color);
+}
+
+.fidelity-btn.active {
+    background: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
 /* Translate Button */
 .translate-btn {
     width: 100%;

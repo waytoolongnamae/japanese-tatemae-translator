@@ -47,6 +47,7 @@ class TranslateRequest(BaseModel):
     """Request model for translation"""
     text: str = Field(..., min_length=1, max_length=5000, description="Text to translate")
     level: Optional[str] = Field("business", description="Politeness level: business, ultra_polite, casual")
+    fidelity: Optional[str] = Field("medium", description="Fidelity level: high, medium, low")
     context: Optional[str] = Field(None, description="Optional context: business, personal, recruiter")
 
 
@@ -57,6 +58,7 @@ class TranslateResponse(BaseModel):
     confidence: float
     detected_language: str
     level: str
+    fidelity: str
     context: Optional[str] = None
     model_info: Optional[dict] = None
 
@@ -93,6 +95,7 @@ async def translate(request: TranslateRequest):
     **Parameters:**
     - text: The direct message to convert (1-5000 characters)
     - level: Politeness level (business, ultra_polite, casual)
+    - fidelity: Fidelity level (high, medium, low) - closeness to original meaning
     - context: Optional context (business, personal, recruiter)
 
     **Returns:**
@@ -107,10 +110,19 @@ async def translate(request: TranslateRequest):
                 detail=f"Invalid level. Must be one of: {', '.join(valid_levels)}"
             )
 
+        # Validate fidelity
+        valid_fidelity = ["high", "medium", "low"]
+        if request.fidelity not in valid_fidelity:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid fidelity. Must be one of: {', '.join(valid_fidelity)}"
+            )
+
         # Perform translation
         result = translator.translate(
             request.text,
             level=request.level,
+            fidelity=request.fidelity,
             context=request.context
         )
 
