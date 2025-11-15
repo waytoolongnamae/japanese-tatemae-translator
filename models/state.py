@@ -9,6 +9,7 @@ class TranslationState(TypedDict):
     # Input
     input_text: str
     level: str  # business, ultra_polite, casual
+    fidelity: Optional[str]  # high, medium, low (closeness to original meaning)
     context: Optional[str]  # business / personal / recruiter
 
     # Processing

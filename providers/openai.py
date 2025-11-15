@@ -151,7 +151,8 @@ confidence: <0.00-1.00>"""
         input_text: str,
         filled_template: str,
         intent: str,
-        level: str
+        level: str,
+        fidelity: str = "medium"
     ) -> str:
         """
         Refine text using OpenAI API.
@@ -161,6 +162,7 @@ confidence: <0.00-1.00>"""
             filled_template: Template-generated text
             intent: Detected intent
             level: Politeness level
+            fidelity: Fidelity level (closeness to original meaning)
 
         Returns:
             Refined Japanese text
@@ -174,6 +176,12 @@ confidence: <0.00-1.00>"""
             "casual": "カジュアルだが礼儀正しい表現（社内チーム向け）"
         }
 
+        fidelity_descriptions = {
+            "high": "元の意味に非常に忠実で、最小限の婉曲表現のみを使用",
+            "medium": "バランスの取れた建前表現（標準）",
+            "low": "最大限の京都風間接表現、意味の乖離を許容して礼儀を優先"
+        }
+
         prompt = f"""# 役割定義
 あなたは日本の伝統的な高文脈コミュニケーションの専門家です。特に、京都の老舗商家に伝わる「建前（たてまえ）」の技法に精通しています。
 
@@ -183,6 +191,7 @@ confidence: <0.00-1.00>"""
 **元のメッセージ**: "{input_text}"
 **意図カテゴリ**: {intent}
 **丁寧さレベル**: {level_descriptions[level]}
+**忠実度レベル**: {fidelity_descriptions[fidelity]}
 
 # 建前表現の本質的原則
 
@@ -240,6 +249,27 @@ c) **状況依存の責任回避**:
 - 「〜と思います」「〜ですね」
 - 親しみやすいが礼儀は保つ
 - 過度な敬語は避ける
+
+## 忠実度レベル別の調整
+
+**high（高忠実度）**:
+- 元の意味から大きく逸脱しない
+- 婉曲表現は最小限に抑える
+- 具体的な内容を明確に保持
+- 「間接的だが理解しやすい」表現を目指す
+
+**medium（中忠実度・標準）**:
+- バランスの取れた建前表現
+- 適度な間接表現と意味の保持
+- 伝統的な建前技法を適切に使用
+- 文脈から意図が十分に読み取れる程度
+
+**low（低忠実度）**:
+- 最大限の京都風間接表現を使用
+- 礼儀と社交辞令を最優先
+- 元の意味からの乖離を許容
+- 「表層的には極めて肯定的だが、深層では否定的」な表現
+- 高度な文脈理解が必要な表現も可
 
 # 変換例
 

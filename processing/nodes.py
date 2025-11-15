@@ -140,22 +140,25 @@ def tatemae_generator_node(state: TranslationState) -> Dict[str, Any]:
 
 def politeness_tuner_node(state: TranslationState) -> Dict[str, Any]:
     """
-    Adjust politeness level and ensure grammatical correctness using provider abstraction.
-    Levels: business (1), ultra_polite (2), casual (3)
+    Adjust politeness level and fidelity, ensuring grammatical correctness using provider abstraction.
+    Politeness levels: business (1), ultra_polite (2), casual (3)
+    Fidelity levels: high (1), medium (2), low (3) - closeness to original meaning
     """
     filled_template = state["filled_template"]
     input_text = state["input_text"]
     intent = state["intent"]
     level = state.get("level", "business")
+    fidelity = state.get("fidelity", "medium")
 
-    logger.info(f"Tuning politeness to level: {level}")
+    logger.info(f"Tuning with politeness: {level}, fidelity: {fidelity}")
 
     try:
         tatemae_text = provider.refine_text(
             input_text=input_text,
             filled_template=filled_template,
             intent=intent,
-            level=level
+            level=level,
+            fidelity=fidelity
         )
         logger.info(f"Provider refined tatemae text: {tatemae_text}")
 

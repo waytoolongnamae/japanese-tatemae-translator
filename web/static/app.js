@@ -5,6 +5,7 @@
 
 // State
 let currentLevel = 'business';
+let currentFidelity = 'medium';
 let lastTranslation = null;
 
 // DOM Elements
@@ -16,6 +17,7 @@ const outputText = document.getElementById('output-text');
 const copyBtn = document.getElementById('copy-btn');
 const shareBtn = document.getElementById('share-btn');
 const levelButtons = document.querySelectorAll('.level-btn');
+const fidelityButtons = document.querySelectorAll('.fidelity-btn');
 const examplesContainer = document.getElementById('examples-container');
 const intentEl = document.getElementById('intent');
 const confidenceEl = document.getElementById('confidence');
@@ -42,6 +44,13 @@ function setupEventListeners() {
     levelButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             selectLevel(btn.dataset.level);
+        });
+    });
+
+    // Fidelity selection
+    fidelityButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectFidelity(btn.dataset.fidelity);
         });
     });
 
@@ -88,6 +97,18 @@ function selectLevel(level) {
     });
 }
 
+// Select fidelity level
+function selectFidelity(fidelity) {
+    currentFidelity = fidelity;
+    fidelityButtons.forEach(btn => {
+        if (btn.dataset.fidelity === fidelity) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+}
+
 // Handle translation
 async function handleTranslate() {
     const text = inputText.value.trim();
@@ -104,7 +125,8 @@ async function handleTranslate() {
             },
             body: JSON.stringify({
                 text: text,
-                level: currentLevel
+                level: currentLevel,
+                fidelity: currentFidelity
             })
         });
 

@@ -42,6 +42,13 @@ POLITENESS_LEVELS = {
     "casual": 3  # Casual Social
 }
 
+# Fidelity Levels (closeness to original meaning)
+FIDELITY_LEVELS = {
+    "high": 1,      # Stay close to original meaning, minimal embellishment
+    "medium": 2,    # Balanced tatemae style (default)
+    "low": 3        # Maximum Kyoto-style indirection, can deviate for politeness
+}
+
 # Template Database
 TEMPLATES: Dict[str, List[str]] = {
     "refusal": [

@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 MAX_INPUT_LENGTH = 5000  # Maximum characters allowed
 MIN_INPUT_LENGTH = 1     # Minimum meaningful input
 VALID_LEVELS = ["business", "ultra_polite", "casual"]
+VALID_FIDELITY = ["high", "medium", "low"]
 VALID_CONTEXTS = ["business", "personal", "recruiter", None]
 
 
@@ -35,18 +36,20 @@ class JapaneseTatemaeTranslator:
         self,
         input_text: str,
         level: str,
+        fidelity: Optional[str],
         context: Optional[str]
-    ) -> Tuple[str, Optional[str]]:
+    ) -> Tuple[str, str, Optional[str]]:
         """
         Validate input parameters.
 
         Args:
             input_text: Text to validate
             level: Politeness level to validate
+            fidelity: Fidelity level to validate
             context: Context to validate
 
         Returns:
-            Tuple of (validated_level, validated_context)
+            Tuple of (validated_level, validated_fidelity, validated_context)
 
         Raises:
             InputValidationError: If validation fails
@@ -82,6 +85,14 @@ class JapaneseTatemaeTranslator:
             )
             validated_level = "business"
 
+        # Validate fidelity - default to medium if invalid
+        validated_fidelity = fidelity or "medium"
+        if validated_fidelity not in VALID_FIDELITY:
+            logger.warning(
+                f"Invalid fidelity '{fidelity}'. Must be one of: {', '.join(VALID_FIDELITY)}. Defaulting to 'medium'."
+            )
+            validated_fidelity = "medium"
+
         # Validate context - default to None if invalid
         validated_context = context
         if context is not None and context not in VALID_CONTEXTS:
@@ -90,12 +101,13 @@ class JapaneseTatemaeTranslator:
             )
             validated_context = None
 
-        return validated_level, validated_context
+        return validated_level, validated_fidelity, validated_context
 
     def translate(
         self,
         input_text: str,
         level: str = "business",
+        fidelity: Optional[str] = None,
         context: Optional[str] = None
     ) -> Dict[str, Any]:
         """
@@ -104,6 +116,7 @@ class JapaneseTatemaeTranslator:
         Args:
             input_text: The input message to translate (1-5000 characters)
             level: Politeness level - "business", "ultra_polite", or "casual"
+            fidelity: Fidelity level - "high", "medium", or "low" (closeness to original meaning)
             context: Optional context tag - "business", "personal", or "recruiter"
 
         Returns:
@@ -113,6 +126,7 @@ class JapaneseTatemaeTranslator:
                 - confidence: Confidence score for intent detection
                 - detected_language: Input language detected
                 - level: Politeness level used
+                - fidelity: Fidelity level used
                 - error: Error message if validation/processing fails
 
         Raises:
@@ -120,13 +134,15 @@ class JapaneseTatemaeTranslator:
 
         Example:
             >>> translator = JapaneseTatemaeTranslator()
-            >>> result = translator.translate("I'm not interested in this job.", level="business")
+            >>> result = translator.translate("I'm not interested in this job.", level="business", fidelity="medium")
             >>> print(result["tatemae_text"])
             現在は別のテーマに注力しており、今回は情報として参考にさせていただきます。
         """
         # Validate inputs and get validated values
         try:
-            validated_level, validated_context = self._validate_input(input_text, level, context)
+            validated_level, validated_fidelity, validated_context = self._validate_input(
+                input_text, level, fidelity, context
+            )
         except InputValidationError as e:
             logger.error(f"Input validation failed: {e}")
             return {
@@ -135,6 +151,7 @@ class JapaneseTatemaeTranslator:
                 "confidence": 0.0,
                 "detected_language": None,
                 "level": level,
+                "fidelity": fidelity or "medium",
                 "context": context,
                 "error": str(e)
             }
@@ -143,6 +160,7 @@ class JapaneseTatemaeTranslator:
         initial_state: TranslationState = {
             "input_text": input_text,
             "level": validated_level,
+            "fidelity": validated_fidelity,
             "context": validated_context,
             "intent": None,
             "confidence": None,
@@ -166,6 +184,7 @@ class JapaneseTatemaeTranslator:
                 "confidence": final_state.get("confidence"),
                 "detected_language": final_state.get("detected_language"),
                 "level": validated_level,
+                "fidelity": validated_fidelity,
                 "context": validated_context
             }
 
@@ -180,17 +199,24 @@ class JapaneseTatemaeTranslator:
                 "confidence": 0.0,
                 "detected_language": None,
                 "level": level,
+                "fidelity": fidelity or "medium",
                 "context": context,
                 "error": str(e)
             }
 
-    def translate_simple(self, input_text: str, level: str = "business") -> str:
+    def translate_simple(
+        self,
+        input_text: str,
+        level: str = "business",
+        fidelity: Optional[str] = None
+    ) -> str:
         """
         Simplified translation interface that returns only the tatemae text.
 
         Args:
             input_text: The input message to translate
             level: Politeness level - "business", "ultra_polite", or "casual"
+            fidelity: Fidelity level - "high", "medium", or "low"
 
         Returns:
             The translated tatemae text as a string
@@ -200,7 +226,7 @@ class JapaneseTatemaeTranslator:
             >>> print(translator.translate_simple("I disagree with that idea."))
             ご意見も理解いたしますが、少し異なる見方をしております。
         """
-        result = self.translate(input_text, level)
+        result = self.translate(input_text, level, fidelity)
         return result["tatemae_text"]
 
 
