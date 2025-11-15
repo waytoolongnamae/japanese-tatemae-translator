@@ -177,13 +177,13 @@ body {
 }
 
 .fidelity-btn:hover {
-    border-color: var(--secondary-color);
+    border-color: var(--primary-color);
 }
 
 .fidelity-btn.active {
-    background: var(--secondary-color);
+    background: var(--primary-color);
     color: white;
-    border-color: var(--secondary-color);
+    border-color: var(--primary-color);
 }
 
 /* Translate Button */
