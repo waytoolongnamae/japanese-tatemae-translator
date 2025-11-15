@@ -168,6 +168,7 @@ async def get_examples():
 
 if __name__ == "__main__":
     import uvicorn
+    import logging
 
     # Get port from environment or use default
     port = int(os.getenv("PORT", 8000))
@@ -178,4 +179,11 @@ if __name__ == "__main__":
     print(f"🔄 API docs: http://localhost:{port}/docs")
     print(f"💡 Share this URL with others to use the app!\n")
 
-    uvicorn.run(app, host=host, port=port)
+    # Configure uvicorn logging with timestamp
+    log_config = uvicorn.config.LOGGING_CONFIG
+    log_config["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
+    log_config["formatters"]["default"]["datefmt"] = "%Y-%m-%d %H:%M:%S"
+    log_config["formatters"]["access"]["fmt"] = '%(asctime)s - %(levelname)s - %(client_addr)s - "%(request_line)s" %(status_code)s'
+    log_config["formatters"]["access"]["datefmt"] = "%Y-%m-%d %H:%M:%S"
+
+    uvicorn.run(app, host=host, port=port, log_config=log_config)
