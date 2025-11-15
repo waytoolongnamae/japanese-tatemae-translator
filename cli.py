@@ -26,6 +26,7 @@ def print_result(result):
     print(f"Intent:     {result['intent']}")
     print(f"Confidence: {result.get('confidence', 0):.2%}")
     print(f"Level:      {result['level']}")
+    print(f"Fidelity:   {result.get('fidelity', 'medium')}")
     if result.get('detected_language'):
         print(f"Language:   {result['detected_language']}")
     print("=" * 80 + "\n")
@@ -45,13 +46,15 @@ def interactive_mode(translator):
     print("  - Type your message (multi-line supported)")
     print("  - Press Esc then Enter (or Meta+Enter) to translate")
     print("  - ':level <business|ultra_polite|casual>' - Change politeness level")
+    print("  - ':fidelity <high|medium|low>' - Change fidelity level")
     print("  - ':model' - Show current model information")
     print("  - ':help' - Show this help")
     print("  - ':quit' or ':q' - Exit")
     print("=" * 80 + "\n")
 
     current_level = "business"
-    print(f"Current politeness level: {current_level}")
+    current_fidelity = "medium"
+    print(f"Current settings: politeness={current_level}, fidelity={current_fidelity}")
 
     # Set up key bindings for multi-line input
     kb = KeyBindings()
@@ -87,9 +90,10 @@ def interactive_mode(translator):
                     print("  Type your message (multi-line supported)")
                     print("  Press Esc then Enter (or Meta+Enter) to translate")
                     print("  :level <business|ultra_polite|casual> - Change politeness level")
-                    print("  :model                                 - Show current model information")
-                    print("  :help                                  - Show this help")
-                    print("  :quit or :q                           - Exit")
+                    print("  :fidelity <high|medium|low>          - Change fidelity level")
+                    print("  :model                                - Show current model information")
+                    print("  :help                                 - Show this help")
+                    print("  :quit or :q                          - Exit")
                     continue
 
                 elif cmd == 'model':
@@ -108,13 +112,22 @@ def interactive_mode(translator):
                         print_colored("✗ Invalid level. Use: business, ultra_polite, or casual", "1;31")
                     continue
 
+                elif cmd.startswith('fidelity '):
+                    fidelity = cmd.split(' ', 1)[1].strip()
+                    if fidelity in ['high', 'medium', 'low']:
+                        current_fidelity = fidelity
+                        print_colored(f"✓ Fidelity level changed to: {current_fidelity}", "1;32")
+                    else:
+                        print_colored("✗ Invalid fidelity. Use: high, medium, or low", "1;31")
+                    continue
+
                 else:
                     print_colored(f"✗ Unknown command: {cmd}", "1;31")
                     continue
 
             # Translate the message
             print_colored("\n⏳ Translating...", "1;33")
-            result = translator.translate(user_input, level=current_level)
+            result = translator.translate(user_input, level=current_level, fidelity=current_fidelity)
             print_result(result)
 
         except KeyboardInterrupt:
@@ -160,6 +173,14 @@ Examples:
         choices=['business', 'ultra_polite', 'casual'],
         default='business',
         help='Politeness level (default: business)'
+    )
+
+    parser.add_argument(
+        '-f', '--fidelity',
+        type=str,
+        choices=['high', 'medium', 'low'],
+        default='medium',
+        help='Fidelity level - closeness to original meaning (default: medium)'
     )
 
     parser.add_argument(
@@ -230,6 +251,7 @@ Examples:
         result = translator.translate(
             message,
             level=args.level,
+            fidelity=args.fidelity,
             context=args.context
         )
 
