@@ -45,6 +45,10 @@ python cli.py -m "I'm not interested in this job."
 # With politeness level
 python cli.py -m "That's not possible." -l ultra_polite
 
+# With fidelity level (closeness to original meaning)
+python cli.py -m "I disagree" -f high  # Direct and frank
+python cli.py -m "I disagree" -f low   # Maximum indirection
+
 # With specific model provider
 python cli.py --model openai  # Use OpenAI
 python cli.py --model deepseek  # Use DeepSeek (default)
@@ -56,21 +60,40 @@ python cli.py --model deepseek  # Use DeepSeek (default)
 from translator import JapaneseTatemaeTranslator
 
 translator = JapaneseTatemaeTranslator()
-result = translator.translate("I'm not interested in this job.", level="business")
+
+# With fidelity control
+result = translator.translate(
+    "I'm not interested in this job.",
+    level="business",
+    fidelity="medium"  # high, medium, or low
+)
 print(result["tatemae_text"])
-# Output: 現在は別のテーマに注力しており、今回は情報として参考にさせていただきます。
+# Medium fidelity: 現在は別のテーマに注力しており、今回は情報として参考にさせていただきます。
+
+# High fidelity (more direct)
+result = translator.translate(
+    "I'm not interested in this job.",
+    level="business",
+    fidelity="high"
+)
+# High fidelity: 興味がございません。
 ```
 
 ---
 
 ## ✨ Features
 
+- **Two-Dimensional Control**: Adjust both politeness level AND fidelity (closeness to original meaning)
+- **Fidelity Levels**:
+  - **High**: Direct and frank with polite language, minimal tatemae
+  - **Medium**: Balanced tatemae expression (default)
+  - **Low**: Maximum Kyoto-style indirection
 - **Kyoto-Style 建前**: Praise while criticizing, say "yes" while meaning "no"
 - **Context Preservation**: Maintains specific details from your input (names, topics, etc.)
 - **Intent Detection**: Classifies messages (refusal, disagreement, delay, disinterest, criticism, neutral)
 - **3 Politeness Levels**: business, ultra_polite, casual
 - **Multi-line Support**: CLI handles pasted text with line breaks
-- **Web & API**: Mobile-friendly web UI + REST API
+- **Web & API**: Mobile-friendly web UI with fidelity selector + REST API
 - **Multiple LLM Providers**: DeepSeek (default) and OpenAI with automatic fallback
 - **Model Selection**: Choose your preferred provider via CLI argument or environment variable
 - **Model Info Display**: See current provider and model in both CLI and web interface
@@ -177,6 +200,12 @@ Get your API key: [platform.deepseek.com](https://platform.deepseek.com)
 
 ## 🎯 Usage
 
+### Fidelity Levels (Closeness to Original Meaning)
+
+- **high**: Direct and frank translation with polite language, minimal tatemae techniques
+- **medium**: Balanced tatemae expression with moderate indirection (default)
+- **low**: Maximum Kyoto-style indirection, meaning can deviate for politeness
+
 ### Politeness Levels
 
 - **business**: Standard business keigo (most professional contexts)
@@ -198,12 +227,18 @@ Get your API key: [platform.deepseek.com](https://platform.deepseek.com)
 # Interactive mode with multi-line support
 python cli.py
 # Type message, press Esc+Enter to submit
+# Use :fidelity high/medium/low to change fidelity level
 
 # Single translation
 python cli.py -m "I disagree with that idea."
 
-# Custom level
-python cli.py -m "Not possible" -l ultra_polite
+# Custom level and fidelity
+python cli.py -m "Not possible" -l ultra_polite -f high
+
+# Fidelity comparison
+python cli.py -m "I'm not interested" -f high    # More direct
+python cli.py -m "I'm not interested" -f medium  # Balanced
+python cli.py -m "I'm not interested" -f low     # Maximum tatemae
 
 # Pipe input
 echo "I can't attend" | python cli.py --stdin
@@ -218,17 +253,18 @@ python cli.py -m "I'm not interested" -c recruiter
 ### Python API
 
 ```python
-# Full metadata
+# Full metadata with fidelity control
 result = translator.translate(
     "Your proposal is inefficient.",
     level="business",
+    fidelity="high",  # high, medium, or low
     context="business"
 )
 print(result["tatemae_text"])
 print(f"Intent: {result['intent']} ({result['confidence']:.0%} confidence)")
 
 # Simple interface (text only)
-text = translator.translate_simple("I disagree", level="casual")
+text = translator.translate_simple("I disagree", level="casual", fidelity="medium")
 ```
 
 ---
@@ -382,4 +418,4 @@ Contributions welcome! Please:
 
 **Built with**: DeepSeek API • LangGraph • FastAPI • Python 3.12+
 
-**Version**: 3.0.0 (Web App Release) - See [docs/CHANGELOG.md](docs/CHANGELOG.md)
+**Version**: 3.1.0 (Fidelity Dimension Release) - See [docs/CHANGELOG.md](docs/CHANGELOG.md)
