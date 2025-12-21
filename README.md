@@ -1,5 +1,6 @@
 # Japanese Hedging Translator (建前 Translator)
 
+![CI](https://github.com/waytoolongnamae/japanese-tatemae-translator/actions/workflows/ci.yml/badge.svg?branch=main)
 ![Coverage](https://img.shields.io/badge/coverage-82%25-brightgreen)
 
 Transform direct messages into polite Japanese business communication with Kyoto-style 建前 (tatemae) - the art of subtle, indirect expression.
