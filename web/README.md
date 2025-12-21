@@ -41,6 +41,11 @@ python app.py
 
 Open [http://localhost:8000](http://localhost:8000) in your browser.
 
+Troubleshooting:
+- If you see an "operation not permitted" bind error, try a different port:
+  `PORT=8081 HOST=127.0.0.1 python app.py`
+- Check local firewall or security software blocking localhost binds.
+
 ### Using Docker
 
 ```bash
