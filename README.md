@@ -1,5 +1,7 @@
 # Japanese Hedging Translator (建前 Translator)
 
+![Coverage](https://img.shields.io/badge/coverage-82%25-brightgreen)
+
 Transform direct messages into polite Japanese business communication with Kyoto-style 建前 (tatemae) - the art of subtle, indirect expression.
 
 ## ⚠️ Important Disclaimer
@@ -97,7 +99,17 @@ result = translator.translate(
 - **Multiple LLM Providers**: DeepSeek (default) and OpenAI with automatic fallback
 - **Model Selection**: Choose your preferred provider via CLI argument or environment variable
 - **Model Info Display**: See current provider and model in both CLI and web interface
-- **81% Test Coverage**: 152 tests with comprehensive unit and integration coverage
+- **82% Test Coverage**: 158 tests with comprehensive unit and integration coverage
+
+---
+
+## ✅ Tests
+
+```bash
+pytest
+```
+
+Last run: 158 tests, 82% coverage.
 
 ---
 
