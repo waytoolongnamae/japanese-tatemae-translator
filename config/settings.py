@@ -1,11 +1,51 @@
 """
 Configuration settings for Japanese Hedging Translator
 """
+import logging
 import os
 from typing import Dict, List
 from dotenv import load_dotenv
 
 load_dotenv()
+
+
+def _get_bool_env(name: str, default: bool) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _get_int_env(name: str, default: int, min_value: int = None, max_value: int = None) -> int:
+    raw = os.getenv(name)
+    try:
+        value = int(raw) if raw is not None else default
+    except ValueError:
+        value = default
+    if min_value is not None and value < min_value:
+        value = min_value
+    if max_value is not None and value > max_value:
+        value = max_value
+    return value
+
+
+def _get_float_env(name: str, default: float, min_value: float = None, max_value: float = None) -> float:
+    raw = os.getenv(name)
+    try:
+        value = float(raw) if raw is not None else default
+    except ValueError:
+        value = default
+    if min_value is not None and value < min_value:
+        value = min_value
+    if max_value is not None and value > max_value:
+        value = max_value
+    return value
+
+
+def _get_csv_env(name: str, default: str = "") -> List[str]:
+    raw = os.getenv(name, default)
+    return [item.strip() for item in raw.split(",") if item.strip()]
+
 
 # API Configuration
 DEEPSEEK_API_KEY_CHAT = os.getenv("DEEPSEEK_API_KEY_CHAT", "")
@@ -17,13 +57,29 @@ OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4")
 
 # Model Provider Selection
-MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "deepseek")  # Options: "deepseek", "openai"
+ALLOWED_MODEL_PROVIDERS = ("deepseek", "openai")
+MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "deepseek").lower()
 DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "deepseek-chat")
-TEMPERATURE = float(os.getenv("TEMPERATURE", "0.7"))
+TEMPERATURE = _get_float_env("TEMPERATURE", 0.7, min_value=0.0, max_value=2.0)
+API_TIMEOUT_SECONDS = _get_float_env("API_TIMEOUT_SECONDS", 30.0, min_value=1.0, max_value=120.0)
+MAX_API_RETRIES = _get_int_env("MAX_API_RETRIES", 3, min_value=0, max_value=10)
 
 # Log Configuration
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
-LOG_DIR = "logs"
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+LOG_DIR = os.getenv("LOG_DIR", "logs")
+LOG_TO_FILE = _get_bool_env("LOG_TO_FILE", True)
+LOG_FILE_NAME = os.getenv("LOG_FILE_NAME", "translator.log")
+LOG_FILE_MAX_BYTES = _get_int_env("LOG_FILE_MAX_BYTES", 5 * 1024 * 1024, min_value=1024)
+LOG_FILE_BACKUPS = _get_int_env("LOG_FILE_BACKUPS", 5, min_value=0, max_value=20)
+
+# Request/Validation Limits
+MIN_INPUT_LENGTH = _get_int_env("MIN_INPUT_LENGTH", 1, min_value=1, max_value=1000)
+MAX_INPUT_LENGTH = _get_int_env("MAX_INPUT_LENGTH", 5000, min_value=1, max_value=100000)
+MAX_REQUEST_BYTES = _get_int_env("MAX_REQUEST_BYTES", 65536, min_value=1024, max_value=10 * 1024 * 1024)
+
+# Web Security/Network Configuration
+CORS_ALLOWED_ORIGINS = _get_csv_env("CORS_ALLOWED_ORIGINS")
+ALLOWED_HOSTS = _get_csv_env("ALLOWED_HOSTS")
 
 # Intent Categories
 INTENT_CATEGORIES = [
@@ -168,3 +224,39 @@ HONORIFIC_MODIFIERS = {
         "closings": ["。", "ね。", "と思います。"]
     }
 }
+
+
+def validate_settings() -> Dict[str, List[str]]:
+    """
+    Validate configuration values and return warnings/errors.
+
+    Returns:
+        Dict with "errors" and "warnings" lists
+    """
+    errors: List[str] = []
+    warnings: List[str] = []
+
+    if MODEL_PROVIDER not in ALLOWED_MODEL_PROVIDERS:
+        warnings.append(
+            f"MODEL_PROVIDER='{MODEL_PROVIDER}' not in {ALLOWED_MODEL_PROVIDERS}; defaulting to fallback behavior."
+        )
+
+    if LOG_LEVEL not in logging._nameToLevel:
+        warnings.append(f"LOG_LEVEL='{LOG_LEVEL}' is not a standard logging level.")
+
+    if MIN_INPUT_LENGTH > MAX_INPUT_LENGTH:
+        errors.append("MIN_INPUT_LENGTH cannot be greater than MAX_INPUT_LENGTH.")
+
+    if API_TIMEOUT_SECONDS <= 0:
+        errors.append("API_TIMEOUT_SECONDS must be greater than 0.")
+
+    if MAX_API_RETRIES < 0:
+        errors.append("MAX_API_RETRIES must be zero or greater.")
+
+    if MODEL_PROVIDER == "deepseek" and not DEEPSEEK_API_KEY_CHAT:
+        warnings.append("DEEPSEEK_API_KEY_CHAT is not set; DeepSeek calls will fall back.")
+
+    if MODEL_PROVIDER == "openai" and not OPENAI_API_KEY:
+        warnings.append("OPENAI_API_KEY is not set; OpenAI calls will fall back.")
+
+    return {"errors": errors, "warnings": warnings}

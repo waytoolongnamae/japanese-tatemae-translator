@@ -14,6 +14,8 @@ from tenacity import (
 )
 from providers.base import LLMProvider
 from config.settings import (
+    API_TIMEOUT_SECONDS,
+    MAX_API_RETRIES,
     OPENAI_API_KEY,
     OPENAI_BASE_URL,
     OPENAI_MODEL,
@@ -40,7 +42,7 @@ class OpenAIProvider(LLMProvider):
             self.client = OpenAI(
                 api_key=self.api_key,
                 base_url=self.base_url,
-                timeout=30.0,
+                timeout=API_TIMEOUT_SECONDS,
                 max_retries=0  # We handle retries with tenacity
             )
             logger.info(f"OpenAI provider initialized successfully with model: {self.model}")
@@ -48,7 +50,7 @@ class OpenAIProvider(LLMProvider):
             logger.warning("OpenAI API key not configured or invalid")
 
     @retry(
-        stop=stop_after_attempt(3),
+        stop=stop_after_attempt(MAX_API_RETRIES or 1),
         wait=wait_exponential(multiplier=1, min=2, max=10),
         retry=retry_if_exception_type((RateLimitError, APIConnectionError, APITimeoutError)),
         before_sleep=before_sleep_log(logger, logging.WARNING),

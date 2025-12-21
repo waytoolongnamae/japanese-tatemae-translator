@@ -55,7 +55,8 @@ class FallbackProvider(LLMProvider):
         input_text: str,
         filled_template: str,
         intent: str,
-        level: str
+        level: str,
+        fidelity: str = "medium"
     ) -> str:
         """
         Basic regex-based text cleanup fallback.

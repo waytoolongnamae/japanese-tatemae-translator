@@ -189,6 +189,7 @@ Get your API key: [platform.deepseek.com](https://platform.deepseek.com)
 | 🚀 Quick Start | [docs/QUICKSTART.md](docs/QUICKSTART.md) |
 | 📱 Web App Setup | [docs/QUICKSTART_WEB.md](docs/QUICKSTART_WEB.md) |
 | 🌐 Deployment | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
+| 🧭 Runbook | [docs/RUNBOOK.md](docs/RUNBOOK.md) |
 | 💻 CLI Usage | [docs/USAGE.md](docs/USAGE.md) |
 | 🎌 Kyoto-Style Guide | [docs/KYOTO_STYLE.md](docs/KYOTO_STYLE.md) |
 | 🔒 Security | [docs/SECURITY.md](docs/SECURITY.md) |

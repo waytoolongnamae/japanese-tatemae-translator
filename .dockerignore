@@ -1,0 +1,15 @@
+__pycache__/
+.venv/
+.git/
+.github/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+.DS_Store
+htmlcov/
+logs/
+dist/
+build/
+.pytest_cache/
