@@ -3,11 +3,13 @@
 Command-line interface for Japanese Hedging Translator
 """
 import argparse
+import logging
 import sys
-import os
 from prompt_toolkit import prompt
 from prompt_toolkit.key_binding import KeyBindings
 from translator import JapaneseTatemaeTranslator
+from config.logging import configure_logging
+from config.settings import validate_settings
 from processing.nodes import initialize_provider, get_provider_info
 
 
@@ -30,6 +32,9 @@ def print_result(result):
     if result.get('detected_language'):
         print(f"Language:   {result['detected_language']}")
     print("=" * 80 + "\n")
+
+
+logger = logging.getLogger(__name__)
 
 
 def interactive_mode(translator):
@@ -139,6 +144,15 @@ def interactive_mode(translator):
 
 def main():
     """Main CLI entry point"""
+    configure_logging()
+    settings_issues = validate_settings()
+    if settings_issues["errors"]:
+        for error in settings_issues["errors"]:
+            print_colored(f"✗ {error}", "1;31")
+        sys.exit(1)
+    for warning in settings_issues["warnings"]:
+        logger.warning(warning)
+
     parser = argparse.ArgumentParser(
         description="Japanese Hedging Translator - Transform direct messages into polite 建前 expressions",
         formatter_class=argparse.RawDescriptionHelpFormatter,

@@ -240,4 +240,4 @@ Interested in contributing? Read:
 
 **Last Updated**: 2025-11-08 (v3.0.0)
 
-**Quick Links**: [Main README](../README.md) | [Web App](../web/README.md) | [Deployment](DEPLOYMENT.md) | [Changelog](CHANGELOG.md)
+**Quick Links**: [Main README](../README.md) | [Web App](../web/README.md) | [Deployment](DEPLOYMENT.md) | [Runbook](RUNBOOK.md) | [Changelog](CHANGELOG.md)

@@ -3,14 +3,12 @@ Main API interface for Japanese Hedging Translator
 """
 import logging
 from typing import Optional, Dict, Any, Tuple
+from config.settings import MAX_INPUT_LENGTH, MIN_INPUT_LENGTH
 from models.state import TranslationState
 from processing.graph import build_workflow
 
 logger = logging.getLogger(__name__)
 
-# Configuration constants
-MAX_INPUT_LENGTH = 5000  # Maximum characters allowed
-MIN_INPUT_LENGTH = 1     # Minimum meaningful input
 VALID_LEVELS = ["business", "ultra_polite", "casual"]
 VALID_FIDELITY = ["high", "medium", "low"]
 VALID_CONTEXTS = ["business", "personal", "recruiter", None]

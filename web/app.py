@@ -2,8 +2,11 @@
 FastAPI web server for Japanese Hedging Translator
 Simple mobile-friendly web interface
 """
+import logging
 import os
 import sys
+import time
+import uuid
 from pathlib import Path
 from typing import Optional
 
@@ -12,12 +15,23 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from pydantic import BaseModel, Field
 
 # Add parent directory to path to import translator
 sys.path.insert(0, str(Path(__file__).parent.parent))
+from config.settings import (
+    ALLOWED_HOSTS,
+    CORS_ALLOWED_ORIGINS,
+    MAX_INPUT_LENGTH,
+    MAX_REQUEST_BYTES,
+    MIN_INPUT_LENGTH,
+    validate_settings
+)
 from translator import JapaneseTatemaeTranslator
 from processing.nodes import get_provider_info
+
+logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -29,11 +43,15 @@ app = FastAPI(
 # CORS middleware for API access
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=CORS_ALLOWED_ORIGINS or [],
+    allow_credentials=bool(CORS_ALLOWED_ORIGINS),
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Restrict allowed hosts if configured
+if ALLOWED_HOSTS:
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=ALLOWED_HOSTS)
 
 # Setup templates and static files
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
@@ -45,7 +63,12 @@ translator = JapaneseTatemaeTranslator()
 
 class TranslateRequest(BaseModel):
     """Request model for translation"""
-    text: str = Field(..., min_length=1, max_length=5000, description="Text to translate")
+    text: str = Field(
+        ...,
+        min_length=MIN_INPUT_LENGTH,
+        max_length=MAX_INPUT_LENGTH,
+        description="Text to translate"
+    )
     level: Optional[str] = Field("business", description="Politeness level: business, ultra_polite, casual")
     fidelity: Optional[str] = Field("medium", description="Fidelity level: high, medium, low")
     context: Optional[str] = Field(None, description="Optional context: business, personal, recruiter")
@@ -56,11 +79,51 @@ class TranslateResponse(BaseModel):
     tatemae_text: str
     intent: str
     confidence: float
-    detected_language: str
+    detected_language: Optional[str] = None
     level: str
     fidelity: str
     context: Optional[str] = None
     model_info: Optional[dict] = None
+
+
+@app.on_event("startup")
+async def on_startup():
+    """Validate settings and set startup metadata."""
+    settings_issues = validate_settings()
+    if settings_issues["errors"]:
+        for error in settings_issues["errors"]:
+            logger.error(error)
+        raise RuntimeError("Invalid configuration detected during startup.")
+    for warning in settings_issues["warnings"]:
+        logger.warning(warning)
+    app.state.start_time = time.time()
+
+
+@app.middleware("http")
+async def security_middleware(request: Request, call_next):
+    """Apply request size limits, request ID, and basic security headers."""
+    content_length = request.headers.get("content-length")
+    if content_length:
+        try:
+            if int(content_length) > MAX_REQUEST_BYTES:
+                return JSONResponse(
+                    status_code=413,
+                    content={"detail": "Request body too large."}
+                )
+        except ValueError:
+            return JSONResponse(
+                status_code=400,
+                content={"detail": "Invalid Content-Length header."}
+            )
+
+    request_id = request.headers.get("x-request-id") or str(uuid.uuid4())
+    response = await call_next(request)
+    response.headers["X-Request-ID"] = request_id
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "same-origin"
+    response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -73,10 +136,14 @@ async def home(request: Request):
 async def health_check():
     """Health check endpoint"""
     provider_info = get_provider_info()
+    uptime_seconds = None
+    if hasattr(app.state, "start_time"):
+        uptime_seconds = int(time.time() - app.state.start_time)
     return {
         "status": "healthy",
         "service": "Japanese Hedging Translator",
-        "model": provider_info
+        "model": provider_info,
+        "uptime_seconds": uptime_seconds
     }
 
 
@@ -180,7 +247,6 @@ async def get_examples():
 
 if __name__ == "__main__":
     import uvicorn
-    import logging
 
     # Get port from environment or use default
     port = int(os.getenv("PORT", 8000))

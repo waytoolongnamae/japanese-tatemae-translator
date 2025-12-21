@@ -3,26 +3,24 @@ Main entry point for Japanese Hedging Translator
 Demonstrates usage with example inputs
 """
 import logging
-import os
 from translator import JapaneseTatemaeTranslator
-from config.settings import LOG_LEVEL, LOG_DIR
+from config.logging import configure_logging
+from config.settings import validate_settings
 
-# Setup logging
-os.makedirs(LOG_DIR, exist_ok=True)
-logging.basicConfig(
-    level=getattr(logging, LOG_LEVEL),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(f'{LOG_DIR}/translator.log'),
-        logging.StreamHandler()
-    ]
-)
+configure_logging()
 
 logger = logging.getLogger(__name__)
 
 
 def main():
     """Run example translations"""
+    settings_issues = validate_settings()
+    if settings_issues["errors"]:
+        for error in settings_issues["errors"]:
+            logger.error(error)
+        raise SystemExit(1)
+    for warning in settings_issues["warnings"]:
+        logger.warning(warning)
     print("=== Japanese Hedging Translator (建前 Translator) ===\n")
 
     # Initialize translator
